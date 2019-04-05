@@ -2,6 +2,7 @@ package com.timersinc.trainning.qiitaviewer
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import okhttp3.OkHttpClient
 import retrofit2.Call
@@ -11,6 +12,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
+
+    val itemsLiveData = MutableLiveData<List<Item>>()
+
     fun getItems() {
         val qiitaToken = "dd55ce34615cf1c20813f021dbe61ad3e68bcf4f"
         val client = OkHttpClient.Builder()
@@ -37,8 +41,8 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
             }
 
             override fun onResponse(call: Call<List<Item>>, response: Response<List<Item>>) {
-                val items = response.body() //: List<Item>?
-                items?.map { item ->  Log.d("test", item.title)}
+                val items = response.body()
+                itemsLiveData.value = items
             }
         })
     }
